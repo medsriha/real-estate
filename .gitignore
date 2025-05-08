@@ -1,0 +1,9 @@
+.env
+uv.lock
+.python-version
+.venv
+__pycache__
+package-lock.json
+node_modules
+logs
+data
