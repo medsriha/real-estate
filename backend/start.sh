@@ -1,36 +1,20 @@
 #!/bin/bash
 
-# Define ports
-BACKEND_PORT=5001  # Changed from default 5000 to avoid conflicts
+# Change to the backend directory
+cd "$(dirname "$0")"
 
-# Start the FastAPI backend
-echo "Starting backend server on port $BACKEND_PORT..."
-uv run api.py --port $BACKEND_PORT 2>&1 | tee -a logs/backend.log &
-BACKEND_PID=$!
+# Create required directories
+mkdir -p data logs/backend
 
-# Give the backend a moment to start
-sleep 2
+# Check if the virtual environment exists
+if [ ! -d ".venv" ]; then
+    echo "Virtual environment not found. Please run ./setup_env.sh first."
+    exit 1
+fi
 
-# Start the React frontend
-echo "Starting frontend server..."
-cd .
-npm start 2>&1 | tee -a logs/frontend.log &
-FRONTEND_PID=$!
+# Activate the virtual environment
+source .venv/bin/activate
 
-# Function to handle script termination
-cleanup() {
-    echo "Shutting down servers..."
-    kill $BACKEND_PID
-    kill $FRONTEND_PID
-    exit 0
-}
-
-# Register the cleanup function for script termination
-trap cleanup SIGINT SIGTERM
-
-# Create logs directory if it doesn't exist
-mkdir -p logs
-
-# Show live logs
-echo "Showing backend logs. Press Ctrl+C to stop servers."
-tail -f logs/backend.log 
+# Run the API server 
+echo "Starting backend server with uvicorn..."
+uvicorn app.main:app --host 0.0.0.0 --port 5001 --reload
