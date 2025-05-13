@@ -1,13 +1,26 @@
 [project]
-name = "backend"
+name = "real-estate-api"
 version = "0.1.0"
-description = "Add your description here"
+description = "Real Estate Listings API"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = [
-    "fastapi>=0.115.12",
-    "pandas>=2.2.3",
-    "python-dotenv>=1.1.0",
-    "requests>=2.32.3",
-    "uvicorn>=0.34.2",
-]
+license = {text = "Proprietary"}
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+select = ["E", "F", "I"]
+ignore = []
