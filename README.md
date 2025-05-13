@@ -1,6 +1,13 @@
 # Real Estate Map Application
 
-A modern web application for visualizing real estate listings on an interactive map. This application allows users to browse active property listings, view property details, and interact with a responsive map interface.
+A full-stack web application for visualizing real estate listings on an interactive map. This application allows users to browse active property listings, view property details, and interact with a responsive map interface.
+
+## Project Overview
+
+This project consists of two main components:
+
+1. **Frontend**: React-based web application with Google Maps integration
+2. **Backend**: FastAPI-based API for real estate listings with geocoding and nearby places information
 
 ## Features
 
@@ -10,160 +17,225 @@ A modern web application for visualizing real estate listings on an interactive 
 - Detailed property panel with image gallery
 - Thumbnail navigation with scroll functionality
 - Responsive design with clean UI
+- Geocoding and nearby places information
+- Caching system for improved performance
 
 ## Project Structure
 
-The project follows React best practices by organizing components based on features and responsibilities:
-
 ```
-frontend/src/
-├── components/            # All React components
-│   ├── common/            # Shared UI components
-│   │   ├── ActionButton.js      # Toggle button for listings
-│   │   ├── ErrorMessage.js      # Error display component
-│   │   └── LoadingIndicator.js  # Loading spinner
-│   │
-│   ├── listings/          # Property listing related components
-│   │   ├── ImageGallery.js      # Main image and thumbnails container
-│   │   ├── ListingPanel.js      # Detailed property information panel
-│   │   └── ThumbnailGallery.js  # Scrollable thumbnail gallery
-│   │
-│   └── map/               # Map related components
-│       ├── InfoBox.js           # Property preview popup
-│       ├── ListingMarker.js     # Map marker for each property
-│       └── MapComponent.js      # Google Maps wrapper
+/
+├── frontend/             # React frontend application
+│   ├── src/              # Source code
+│   │   ├── components/   # React components
+│   │   ├── hooks/        # Custom React hooks
+│   │   ├── utils/        # Utility functions
+│   │   ├── App.js        # Main application component
+│   │   └── ...
+│   └── ...               # Frontend configuration files
 │
-├── hooks/                 # Custom React hooks
-│   └── useListings.js     # State and data management for listings
-│
-├── utils/                 # Utility functions
-│   └── formatters.js      # Data formatting utilities
-│
-├── App.js                 # Main application component
-├── App.css                # Main styles
-├── config.js              # Configuration settings
-└── index.js               # Entry point
+├── backend/              # FastAPI backend application
+│   ├── app/              # Application code
+│   │   ├── api/          # API endpoints
+│   │   ├── core/         # Core application code
+│   │   ├── db/           # Database utilities
+│   │   ├── models/       # Data models
+│   │   ├── services/     # Business logic services
+│   │   └── main.py       # Application entry point
+│   ├── tests/            # Test suite
+│   ├── data/             # Data storage
+│   └── ...               # Backend configuration files
 ```
 
-## Component Breakdown
+## Setup and Installation
 
-### Map Components
+### Backend Setup
 
-#### MapComponent
-- Main container for Google Maps
-- Renders the map, markers, and info boxes
-- Handles map interactions
+#### Quick Setup with uv (Recommended)
 
-#### ListingMarker
-- Renders property markers on the map
-- Displays price in a compact format
-- Handles click events for showing property info
+1. Install uv if you don't have it:
+```bash
+pip install uv
+```
 
-#### InfoBox
-- Property preview that shows when a marker is clicked
-- Displays basic property information and primary image
-- Includes a button to view full details
+2. Use the setup script to create the environment and install dependencies:
+```bash
+cd backend
+./setup_env.sh        # For production
+./setup_env.sh dev    # For development (includes testing tools)
+```
 
-### Listing Components
+#### Manual Backend Setup
 
-#### ListingPanel
-- Detailed property information panel
-- Displays when a user wants to see more details
-- Contains image gallery and property specifications
+1. Create a virtual environment:
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
 
-#### ImageGallery
-- Main property image display
-- Contains the ThumbnailGallery for navigating multiple images
+2. Install dependencies:
+```bash
+pip install -r requirements.txt  # For production
+pip install -r requirements/dev.txt  # For development
+```
 
-#### ThumbnailGallery
-- Horizontally scrollable thumbnails with navigation arrows
-- Handles complex scroll logic and thumbnail selection
-- Uses refs to track visible thumbnails
+#### API Keys for Backend
 
-### Common Components
+Create a `.env` file in the backend directory with:
+```
+RESO_SERVER_TOKEN=your_reso_token
+GEOAPIFY_API_KEY=your_geoapify_key
+GOOGLE_MAPS_API_KEY=your_google_maps_key
+```
 
-#### ActionButton
-- Toggle button for showing/hiding listings
-- Adapts its text based on current state
+### Frontend Setup
 
-#### LoadingIndicator
-- Spinner shown during data loading
+1. Configure your Google Maps API key in `frontend/src/config.js`
+2. Install dependencies:
+```bash
+cd frontend
+npm install
+```
 
-#### ErrorMessage
-- Displays error messages when API calls fail
+## Running the Application
 
-## Custom Hooks
+### Running the Backend
 
-### useListings
-- Centralizes all listing-related state and logic
-- Handles API calls to fetch listings
-- Manages selection states and user interactions
-- Provides methods for component interaction
+Start the server with:
+```bash
+cd backend
+./start.sh
+```
 
-## Utility Functions
+Or manually:
+```bash
+cd backend
+source .venv/bin/activate
+uvicorn app.main:app --host 0.0.0.0 --port 5001 --reload
+```
 
-### formatters.js
-- `formatMarkerPrice`: Formats prices for map markers (e.g., $1.2M)
-- `formatPrice`: Formats full price with currency formatting
-- `formatAddress`: Combines address components into a readable string
+### Running the Frontend
 
-## Key React Patterns Used
+```bash
+cd frontend
+npm start
+```
 
-1. **Component Composition**: Breaking UI into smaller, reusable components
-2. **Custom Hooks**: Extracting stateful logic into reusable hooks
-3. **Container/Presentational Pattern**: Separating data logic from UI components
-4. **Conditional Rendering**: Showing/hiding components based on state
-5. **Event Handling**: Managing user interactions across components
-6. **React Refs**: Using refs for DOM manipulation in the thumbnail gallery
-7. **Responsive Design**: Adapting UI based on available space
+## API Endpoints
 
-## Implementation Details
+### Listings
+- `GET /api/listings/active` - Get active real estate listings
+- `GET /api/listings/{listing_key}` - Get details for a specific listing
 
-### State Management
-- Used React's built-in useState and useEffect hooks for state management
-- Centralized listing-related state in a custom hook
-- Implemented proper data flow with props
+### Places
+- `GET /api/places/nearby` - Search for places near a location
+- `GET /api/places/photo` - Get a photo by reference
 
-### Styling Approach
-- Used inline styles for component-specific styling
-- Leveraged CSS classes for common styling patterns
+### System
+- `GET /api/health` - Check API health
+- `GET /api/cache/stats` - Get cache statistics
+- `DELETE /api/cache/clear` - Clear cache
 
-### API Integration
-- Integrated with a backend API to fetch property listings
-- Implemented proper loading and error states
+## Frontend Architecture
+
+### Component Breakdown
+
+#### Map Components
+- **MapComponent**: Main container for Google Maps
+- **ListingMarker**: Renders property markers on the map
+- **InfoBox**: Property preview that shows when a marker is clicked
+
+#### Listing Components
+- **ListingPanel**: Detailed property information panel
+- **ImageGallery**: Main property image display
+- **ThumbnailGallery**: Horizontally scrollable thumbnails
+
+#### Common Components
+- **ActionButton**: Toggle button for showing/hiding listings
+- **LoadingIndicator**: Spinner shown during data loading
+- **ErrorMessage**: Displays error messages when API calls fail
+
+### Custom Hooks
+- **useListings**: Centralizes all listing-related state and logic
+
+### Component Organization
+The frontend uses a component index (`src/components/index.js`) to simplify imports and follows a modular CSS organization to maintain clean separation of concerns.
+
+## Backend Architecture
+
+### Core Services
+- **Geocoding Service**: Handles location data conversion
+- **Places API Service**: Retrieves nearby places information
+- **RESO API Service**: Interfaces with real estate data
+
+### Cache Maintenance
+Run the cache maintenance script manually:
+```bash
+cd backend
+source .venv/bin/activate
+python clear_cache.py
+
+# Options
+python clear_cache.py --dry-run   # Show what would be deleted without making changes
+python clear_cache.py --json      # Output in JSON format
+```
+
+Set up a cron job to automatically clean up expired cache entries:
+```bash
+cd backend
+./cron_setup.sh
+```
+
+## Development
+
+### Backend Development
+
+Make sure your virtual environment is activated:
+```bash
+cd backend
+source .venv/bin/activate
+```
+
+Run tests:
+```bash
+pytest
+```
+
+Format code:
+```bash
+black .
+isort .
+```
+
+Lint code:
+```bash
+ruff check .
+```
+
+### Frontend Development Workflow
+
+The application follows a component-based architecture where:
+
+1. `App.js` is the main component that orchestrates all other components
+2. State management is centralized in custom hooks (`useListings.js`)
+3. UI components are organized by feature/purpose
+4. Common utilities are extracted into the `utils` directory
 
 ## Technologies Used
 
+### Frontend
 - React (Hooks, Function Components)
 - Google Maps API (@vis.gl/react-google-maps)
 - Fetch API for data retrieval
 - ResizeObserver for responsive elements
 
-## Styling Approach
+### Backend
+- FastAPI (Python web framework)
+- Pydantic for data validation
+- uv for dependency management
+- Geocoding and Places APIs
 
-The application uses a modular CSS organization to maintain clean separation of concerns:
-
-```
-frontend/src/
-├── components/
-│   ├── common/
-│   │   └── common.css        # Styles for common UI components
-│   ├── listings/
-│   │   └── listings.css      # Styles for listing-related components
-│   └── map/
-│       └── map.css           # Styles for map-related components
-├── App.css                   # Application-wide styles
-```
-
-This approach:
-- Groups styles with their related components
-- Makes it easier to find and update styles
-- Prevents style conflicts by scoping them to their components
-- Improves maintainability by organizing styles logically
-
-## Code Architecture Improvements
-
-The codebase was restructured following these principles:
+## Code Architecture Principles
 
 1. **Separation of Concerns**: Each component has a single responsibility
 2. **Modularity**: Components are modular and reusable
