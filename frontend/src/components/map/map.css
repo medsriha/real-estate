@@ -1,0 +1,513 @@
+/* Map Component Styles */
+
+/* Marker Styles */
+.marker-price {
+  background-color: #4285F4;
+  color: white;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+}
+
+/* Highlighted marker for when viewing a restaurant */
+.marker-price.highlighted {
+  background-color: #4CAF50; /* Green */
+  border: 2px solid white;
+  transform: scale(1.1);
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+  }
+}
+
+/* Info Box Container */
+.info-box-container {
+  touch-action: none; /* Block all touch actions */
+  user-select: none; /* Prevents text selection */
+  z-index: 1000;
+  pointer-events: auto !important; /* Ensure pointer events work */
+  cursor: default;
+  isolation: isolate; /* Creates a new stacking context */
+}
+
+/* Info Box Styles */
+.info-box {
+  background-color: white;
+  padding: 0; /* Reduced padding as we'll control it in child elements */
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  touch-action: none;
+  user-select: none;
+  transform: translateZ(0); /* Force hardware acceleration */
+}
+
+/* Clickable InfoBox style */
+.info-box.clickable {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.info-box.clickable:hover {
+  transform: translateY(-2px) translateZ(0);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* InfoBox Header with Pin Button */
+.info-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.info-box-header h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.info-box p {
+  margin: 8px 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #444;
+}
+
+/* Info Box Image Container */
+.info-box-image-container {
+  position: relative;
+  margin: 0;
+}
+
+.info-box-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.info-box-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  z-index: 2;
+  pointer-events: auto; /* Ensure click events work */
+}
+
+.info-box-arrow:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.info-box-arrow.left {
+  left: 8px;
+}
+
+.info-box-arrow.right {
+  right: 8px;
+}
+
+.info-box-image-counter {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+}
+
+/* Scroll Indicator */
+.info-box-scroll-indicator-track {
+  height: 3px;
+  background-color: #eaeaea;
+  border-radius: 2px;
+  margin: 0 0 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.info-box-scroll-indicator-thumb {
+  position: absolute;
+  height: 100%;
+  background-color: #4285F4;
+  border-radius: 2px;
+  transition: left 0.2s ease-out;
+}
+
+/* Button Styles */
+.expand-button {
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 12px;
+  width: 100%;
+  font-weight: 500;
+  font-size: 15px;
+  pointer-events: auto; /* Ensure click events work */
+}
+
+.expand-button:hover {
+  background-color: #3367d6;
+}
+
+/* Nearby Restaurants Styles */
+.nearby-restaurants {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  max-height: 500px;
+  overflow-y: auto;
+  width: 100%;
+  z-index: 10;
+}
+
+/* Ensure scrollable content doesn't interfere with map zooming */
+.scrollable-content {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.nearby-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 2;
+}
+
+.nearby-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.restaurant-list {
+  padding: 8px;
+}
+
+.restaurant-item {
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.restaurant-item:last-child {
+  border-bottom: none;
+}
+
+.restaurant-item h4 {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.restaurant-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.restaurant-details > div {
+  flex: 1;
+}
+
+.restaurant-details p {
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+.rating {
+  display: inline-block;
+  margin-bottom: 5px;
+  color: #ff9800;
+  font-weight: 500;
+}
+
+.no-rating {
+  display: inline-block;
+  margin-bottom: 5px;
+  color: #888;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.price-level {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.open {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.closed {
+  color: #f44336;
+  font-weight: 500;
+}
+
+.restaurant-image {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+.restaurant-actions {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.view-on-maps, .visit-website {
+  display: inline-block;
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.view-on-maps:hover, .visit-website:hover {
+  text-decoration: underline;
+}
+
+.loading, .no-results, .error, .loading-more {
+  padding: 16px;
+  text-align: center;
+  color: #666;
+}
+
+.error {
+  color: #d32f2f;
+}
+
+.load-more-button {
+  display: block;
+  margin: 16px auto;
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.load-more-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Find Nearby Restaurants Button */
+.find-nearby-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 16px;
+  margin-top: 8px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.find-nearby-button:hover {
+  background-color: #388e3c;
+}
+
+.find-nearby-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Panel version of restaurant component */
+.panel-nearby {
+  margin-top: 16px;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 16px;
+}
+
+/* Restaurant marker on map */
+/* .restaurant-marker { ... } */
+/* .restaurant-marker-icon { ... } */
+/* .restaurant-marker-name { ... } */
+
+/* Place Item Styles */
+.place-item {
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.place-item:last-child {
+  border-bottom: none;
+}
+
+.place-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.transit-icon {
+  font-size: 20px;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+}
+
+.place-header h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  flex: 1;
+}
+
+.place-distance {
+  font-size: 13px;
+  color: #666;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+.name-with-icon {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.name-with-icon h4 {
+  margin: 0;
+  padding: 0;
+}
+
+/* Info Box Content Section */
+.info-box-content {
+  padding: 16px;
+}
+
+/* Price Line with Badge */
+.info-price-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.info-price {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+}
+
+.info-box-badge {
+  background-color: #f0f4fd;
+  color: #4285F4;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Address */
+.info-address {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+/* Features Section */
+.info-features {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.info-feature-icon {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.info-feature-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.info-feature-label {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* Description */
+.info-description {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #666;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+/* Click Hint */
+.info-hint {
+  text-align: center;
+  font-size: 12px;
+  color: #4285F4;
+  padding: 8px 0 4px;
+  font-weight: 500;
+} 
