@@ -1,0 +1,812 @@
+/* Listing Components Styles */
+
+/* Listing Panel */
+.listing-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background-color: white;
+  padding: 18px;
+  box-shadow: -2px 0 12px rgba(0,0,0,0.2);
+  z-index: 10;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Pinned Panels */
+.listing-panel.pinned {
+  z-index: 9; /* Slightly lower z-index than active panel */
+  border-left: 2px solid #4285F4;
+  box-shadow: 0 0 0 rgba(0,0,0,0); /* Remove shadow to avoid double shadows between panels */
+}
+
+/* First pinned panel should have a shadow */
+.listing-panel.pinned:first-child {
+  box-shadow: -2px 0 12px rgba(0,0,0,0.2);
+}
+
+/* Max panels warning */
+.max-panels-warning {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 100, 100, 0.9);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  animation: fadeIn 0.3s, fadeOut 0.5s 4.5s;
+  max-width: 90%;
+  text-align: center;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translate(-50%, 0); }
+  to { opacity: 0; transform: translate(-50%, -20px); }
+}
+
+/* Compact Panel Styles */
+.listing-panel.compact {
+  padding: 12px;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.compact-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.compact-info h3 {
+  font-size: 18px;
+  margin: 6px 0;
+}
+
+.compact-info .beds-baths {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.compact-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-top: 12px;
+}
+
+/* Panel Controls */
+.panel-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.listing-panel.compact .panel-controls {
+  justify-content: center;
+}
+
+.close-button, .expand-toggle-button, .pin-panel-button, .unpin-panel-button {
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button:hover, .expand-toggle-button:hover, .pin-panel-button:hover, .unpin-panel-button:hover {
+  background-color: rgba(0,0,0,0.05);
+  border-radius: 6px;
+}
+
+.pin-panel-button, .unpin-panel-button {
+  font-size: 16px;
+}
+
+.unpin-panel-button {
+  color: #4285F4;
+}
+
+/* Listing info */
+.listing-info {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.listing-info h3 {
+  margin-top: 12px;
+  margin-bottom: 8px;
+  font-size: 22px;
+  color: #333;
+}
+
+.listing-info p {
+  margin: 8px 0;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #444;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listing-id {
+  font-size: 14px;
+  color: #666;
+  margin-top: 12px;
+}
+
+/* Image Gallery */
+.listing-images {
+  margin-bottom: 18px;
+}
+
+.image-container {
+  width: 100%;
+}
+
+.main-image {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.no-images {
+  height: 250px;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  color: #777;
+}
+
+/* Thumbnail Gallery */
+.image-thumbnails {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  padding-bottom: 5px;
+}
+
+.image-thumbnails::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* Scroll indicator */
+.scroll-indicator-track {
+  height: 4px;
+  background-color: #eaeaea;
+  border-radius: 2px;
+  margin: 5px 0 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll-indicator-thumb {
+  position: absolute;
+  height: 100%;
+  background-color: #4285F4;
+  border-radius: 2px;
+  transition: left 0.1s ease-out;
+}
+
+.thumbnail {
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.thumbnail.selected {
+  border: 2px solid #4285F4;
+}
+
+.scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  z-index: 2;
+}
+
+.scroll-arrow:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.scroll-arrow.left {
+  left: 8px;
+}
+
+.scroll-arrow.right {
+  right: 8px;
+}
+
+/* Restaurants Section in the ListingPanel */
+.restaurants-section {
+  margin-top: 16px;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 16px;
+}
+
+.section-title {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.restaurant-content {
+  overflow-y: visible;
+  margin-top: 10px;
+}
+
+.restaurant-list {
+  border-top: 1px solid #f0f0f0;
+}
+
+.restaurant-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.restaurant-item:last-child {
+  border-bottom: none;
+}
+
+.restaurant-item h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Restaurant header with name and distance */
+.restaurant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.restaurant-header h4 {
+  margin: 0;
+  flex: 1;
+}
+
+/* Restaurant distance styling */
+.restaurant-distance {
+  font-size: 14px;
+  color: #4285F4;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+/* Style the restaurant images to be smaller to fit more content */
+.restaurant-image {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+}
+
+/* Adjust load more button to be more compact */
+.load-more-button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  width: 100%;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Restaurant actions */
+.restaurant-actions {
+  display: flex;
+  margin-top: 8px;
+  gap: 10px;
+}
+
+.view-on-map-button {
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.view-on-map-button:hover {
+  background-color: #3367d6;
+}
+
+.visit-website {
+  background-color: #f8f8f8;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.2s;
+}
+
+.visit-website:hover {
+  background-color: #f0f0f0;
+}
+
+/* Place type tabs */
+.place-type-tabs {
+  display: flex;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.place-type-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  color: #666;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.tab-button:hover {
+  color: #333;
+}
+
+.tab-button.active {
+  color: #E31C5F;
+  font-weight: 500;
+}
+
+.tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #E31C5F;
+}
+
+.nearby-places-container {
+  min-height: 200px; /* Prevent layout shift when switching between tabs */
+}
+
+/* Nearby Places Section - Make it the same width as panel */
+.nearby-places-section {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-top: 20px;
+}
+
+.nearby-places-section h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+/* Ensure place items inside fit panel width */
+.place-item {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Place containers */
+.place-content,
+.place-list {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Place item components */
+.place-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.place-header h4 {
+  margin: 0;
+  padding-right: 8px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.place-distance {
+  white-space: nowrap;
+  color: #4285F4;
+  font-size: 14px;
+}
+
+.place-details {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.place-details p {
+  margin: 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.place-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+}
+
+/* Property Details Component Styles */
+.property-details {
+  margin-top: 20px;
+}
+
+.property-header {
+  margin-bottom: 20px;
+}
+
+.property-price {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 5px 0;
+}
+
+.property-address {
+  font-size: 16px;
+  color: #555;
+  margin: 0 0 15px 0;
+}
+
+.property-primary-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 10px;
+  padding: 10px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.property-section {
+  margin: 25px 0;
+}
+
+.property-section h4 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.property-description {
+  margin: 25px 0;
+}
+
+.property-description h4 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.property-description p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #555;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.property-detail-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.detail-label {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 3px;
+}
+
+.detail-value {
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
+}
+
+.property-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.status-tag {
+  background-color: #4CAF50;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  display: inline-block;
+}
+
+.status-tag.sold {
+  background-color: #F44336;
+}
+
+.property-appliances, .features-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.appliance-tag, .feature-tag {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.listing-info-footer {
+  margin-top: 30px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  font-size: 12px;
+  color: #888;
+}
+
+/* Amenities Section Styles */
+.amenities-section {
+  margin: 25px 0;
+}
+
+.amenities-section h4 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.amenity-category {
+  margin-bottom: 20px;
+}
+
+.category-title {
+  font-size: 16px;
+  color: #444;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.amenity-group {
+  margin-bottom: 15px;
+}
+
+.amenity-group h5 {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.amenity-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.amenity-tag {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+/* Financial Info Styles */
+.financial-info-section {
+  margin: 25px 0;
+}
+
+.financial-info-section h4 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.financial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.financial-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.financial-label {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 3px;
+}
+
+.financial-value {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+.financing-info {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.financing-info h5 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #444;
+}
+
+.financing-item {
+  margin-bottom: 12px;
+}
+
+.financing-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.financing-option {
+  background-color: #f8f8f8;
+  color: #555;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+/* Responsive Styles for Property Details */
+@media (max-width: 768px) {
+  .details-grid, .financial-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  .property-price {
+    font-size: 20px;
+  }
+  
+  .property-address {
+    font-size: 14px;
+  }
+}
+
+/* Listing Panel Tab Navigation */
+.panel-tabs {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  margin: 15px 0;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.panel-tabs::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.panel-tab {
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  color: #555;
+  transition: all 0.2s ease;
+}
+
+.panel-tab:hover {
+  color: #1a73e8;
+  background-color: rgba(26, 115, 232, 0.05);
+}
+
+.panel-tab.active {
+  color: #1a73e8;
+  border-bottom: 2px solid #1a73e8;
+  font-weight: 500;
+}
+
+.tab-content {
+  padding: 5px 0;
+  overflow-y: auto;
+}
+
+.listing-basic-info {
+  margin: 10px 0;
+}
+
+.listing-basic-info h3 {
+  font-size: 22px;
+  margin: 0 0 5px 0;
+  color: #333;
+}
+
+.listing-basic-info p {
+  margin: 3px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.beds-baths {
+  font-weight: 500;
+  color: #444 !important;
+} 
