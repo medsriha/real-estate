@@ -83,52 +83,6 @@ async def nearby_search(
     
     return results
 
-@router.get("/photo", response_class=Response)
-async def place_photo(
-    photo_reference: str,
-    maxwidth: int = Query(400, ge=100, le=1600),
-    maxheight: Optional[int] = None,
-    places_client: PlacesClient = Depends(get_places_client),
-    places_db: PlacesDatabase = Depends(get_places_db)
-):
-    """
-    Get a place photo by reference
-    
-    - **photo_reference**: The photo reference string from Places API
-    - **maxwidth**: Maximum width of the photo (max: 1600)
-    - **maxheight**: Optional maximum height of the photo
-    """
-    # Check cache first
-    cached_photo = places_db.get_cached_photo(photo_reference)
-    if cached_photo:
-        logger.debug(f"Using cached photo for reference: {photo_reference[:10]}...")
-        return Response(
-            content=cached_photo['photo_data'],
-            media_type=cached_photo['content_type']
-        )
-    
-    # If not cached, get from API
-    photo_result = places_client.get_place_photo(
-        photo_reference=photo_reference,
-        max_width=maxwidth,
-        max_height=maxheight
-    )
-    
-    if "error" in photo_result:
-        logger.error(f"Error fetching photo: {photo_result['error']}")
-        raise HTTPException(status_code=404, detail="Photo not found")
-    
-    # Cache the photo
-    places_db.cache_photo(
-        photo_reference=photo_reference,
-        photo_data=photo_result['photo_data'],
-        content_type=photo_result['content_type']
-    )
-    
-    return Response(
-        content=photo_result['photo_data'],
-        media_type=photo_result['content_type']
-    )
 
 @router.post("/clear-cache")
 async def clear_places_cache(

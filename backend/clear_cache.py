@@ -23,14 +23,14 @@ def main():
     else:
         # Print a human-readable summary
         print(f"Cache maintenance summary:")
-        print(f"- Total entries: {result['total']['places']} places, {result['total']['photos']} photos ({result['total']['size']})")
+        print(f"- Total entries: {result['total']['places']} places ({result['total']['size']})")
         
         if 'deleted' in result and result['deleted']:
-            print(f"- Deleted: {result['deleted']['places']} places, {result['deleted']['photos']} photos ({result['deleted']['size']})")
+            print(f"- Deleted: {result['deleted']['places']} places ({result['deleted']['size']})")
         elif args.dry_run:
-            print(f"- Would delete: {result['expired']['places']} places, {result['expired']['photos']} photos ({result['expired']['size']})")
+            print(f"- Would delete: {result['expired']['places']} places ({result['expired']['size']})")
         
-        print(f"- Remaining: {result['remaining']['places']} places, {result['remaining']['photos']} photos")
+        print(f"- Remaining: {result['remaining']['places']} places")
         
         if 'processing_time' in result:
             print(f"- Processing time: {result['processing_time']}")

@@ -184,16 +184,6 @@ class PlacesDatabase(Database):
         )
         ''')
         
-        # Create table for caching place photos
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS place_photos (
-            photo_reference TEXT PRIMARY KEY,
-            photo_data BLOB,
-            content_type TEXT,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-        ''')
-        
         self.conn.commit()
 
     def get_cached_places(self, location_key: str) -> Optional[Dict[str, Any]]:
@@ -234,46 +224,6 @@ class PlacesDatabase(Database):
         self.conn.commit()
         logger.debug(f"Cached {len(results.get('results', []))} places results")
 
-    def get_cached_photo(self, photo_reference: str) -> Optional[Dict[str, Any]]:
-        """Get cached photo if it exists and is not expired"""
-        cursor = self.conn.cursor()
-        cursor.execute(
-            "SELECT photo_data, content_type, timestamp FROM place_photos WHERE photo_reference = ?", 
-            (photo_reference,)
-        )
-        result = cursor.fetchone()
-        
-        if result:
-            is_expired = self.is_cache_expired(result['timestamp'])
-            if not is_expired:
-                logger.debug(f"Found valid photo cache for reference: {photo_reference[:10]}...")
-                return {
-                    'photo_data': result['photo_data'],
-                    'content_type': result['content_type']
-                }
-            else:
-                logger.debug(f"Found expired photo cache for reference: {photo_reference[:10]}...")
-        else:
-            logger.debug(f"No photo cache found for reference: {photo_reference[:10]}...")
-        
-        return None
-
-    def cache_photo(self, photo_reference: str, photo_data: bytes, content_type: str) -> None:
-        """Cache a photo from Google Places API"""
-        cursor = self.conn.cursor()
-        data_size = len(photo_data) if photo_data else 0
-        logger.debug(f"Caching photo ({data_size} bytes) for reference: {photo_reference[:10]}...")
-        
-        cursor.execute(
-            """
-            INSERT OR REPLACE INTO place_photos
-            (photo_reference, photo_data, content_type, timestamp)
-            VALUES (?, ?, ?, datetime('now'))
-            """,
-            (photo_reference, photo_data, content_type)
-        )
-        self.conn.commit()
-
     def get_cache_stats(self) -> Dict[str, Any]:
         """Get statistics about cached data"""
         logger.debug("Retrieving cache statistics")
@@ -286,26 +236,15 @@ class PlacesDatabase(Database):
         cursor.execute("SELECT SUM(LENGTH(results)) FROM nearby_places")
         places_size = cursor.fetchone()[0] or 0
         
-        # Get photo stats
-        cursor.execute("SELECT COUNT(*) FROM place_photos")
-        photos_count = cursor.fetchone()[0]
-        
-        cursor.execute("SELECT SUM(LENGTH(photo_data)) FROM place_photos")
-        photos_size = cursor.fetchone()[0] or 0
-        
         # Calculate total size
-        total_size = places_size + photos_size
+        total_size = places_size
         
-        logger.info(f"Cache stats: {places_count} places ({places_size} bytes), {photos_count} photos ({photos_size} bytes)")
+        logger.info(f"Cache stats: {places_count} places ({places_size} bytes)")
         
         return {
             "places": {
                 "count": places_count,
                 "size": places_size
-            },
-            "photos": {
-                "count": photos_count,
-                "size": photos_size
             },
             "total_cache_size": total_size
         }
@@ -315,7 +254,7 @@ class PlacesDatabase(Database):
         Clear the cache
         
         Args:
-            cache_type: Type of cache to clear (places or photos). If None, clears all.
+            cache_type: Type of cache to clear. Currently only 'places' is supported. If None, clears all.
             
         Returns:
             Dict with results of the operation
@@ -333,17 +272,10 @@ class PlacesDatabase(Database):
                 result["deleted"]["places"] = places_count
                 logger.info(f"Deleted {places_count} entries from places cache")
             
-            if cache_type is None or cache_type == "photos":
-                cursor.execute("SELECT COUNT(*) FROM place_photos")
-                photos_count = cursor.fetchone()[0]
-                cursor.execute("DELETE FROM place_photos")
-                result["deleted"]["photos"] = photos_count
-                logger.info(f"Deleted {photos_count} entries from photos cache")
-            
             self.conn.commit()
             return result
             
         except Exception as e:
             logger.error(f"Error clearing cache: {str(e)}")
             self.conn.rollback()
-            raise 
+            raise Exception(f"Error clearing cache: {str(e)}") 
