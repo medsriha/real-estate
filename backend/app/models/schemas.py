@@ -54,14 +54,6 @@ class Listing(BaseModel):
         extra = "allow"  # Allow extra fields that aren't defined in the model
 
 
-class PlacePhoto(BaseModel):
-    """Representation of a photo from Places API"""
-    photo_reference: str
-    height: Optional[int] = None
-    width: Optional[int] = None
-    html_attributions: Optional[List[str]] = None
-
-
 class Place(BaseModel):
     """Representation of a place from Google Places API"""
     place_id: str
@@ -69,7 +61,6 @@ class Place(BaseModel):
     vicinity: Optional[str] = None
     formatted_address: Optional[str] = None
     geometry: Dict[str, Any]
-    photos: Optional[List[PlacePhoto]] = None
     rating: Optional[float] = None
     user_ratings_total: Optional[int] = None
     types: Optional[List[str]] = None
@@ -89,7 +80,6 @@ class PlacesResponse(BaseModel):
 class CacheStats(BaseModel):
     """Cache statistics response model"""
     places: Dict[str, Any]
-    photos: Dict[str, Any]
     total_cache_size: int
     total_cache_size_formatted: str
     db_size: Optional[int] = None

@@ -11,8 +11,6 @@ class PlacesClient:
         """Initialize the Google Places API client"""
         self.api_key = settings.GOOGLE_MAPS_API_KEY
         self.places_api_url = settings.PLACES_API_BASE_URL
-        self.photo_api_url = settings.PLACE_PHOTO_API_URL
-        self.photo_api_url_new = settings.PLACE_PHOTO_API_URL_NEW
     
     def search_nearby(
         self, 
@@ -74,7 +72,7 @@ class PlacesClient:
         try:
             # Define the fields needed based on what's used in NearbyPlaces.js
             # Set the field mask based on the data we need for our frontend
-            field_mask = "places.displayName,places.id,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.types,places.photos,places.regularOpeningHours,places.priceLevel"
+            field_mask = "places.displayName,places.id,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.types,places.regularOpeningHours,places.priceLevel"
             
             # If using pagetoken, GET request is used
             if pagetoken:
@@ -115,70 +113,6 @@ class PlacesClient:
                 except:
                     error_response["response"] = e.response.text
             return error_response
-    
-    def get_place_photo(self, photo_reference: str, max_width: int = 400, max_height: Optional[int] = None) -> Dict[str, Any]:
-        """
-        Get a place photo from Google Places API
-        
-        Args:
-            photo_reference: Photo reference string
-            max_width: Maximum width of the photo
-            max_height: Optional maximum height of the photo
-            
-        Returns:
-            Dictionary with photo data and content type
-        """
-        logger.debug(f"Fetching place photo: {photo_reference[:10]}...")
-        
-        # Use the new photos API endpoint
-        url = f"{self.photo_api_url_new}"
-        params = {
-            "key": self.api_key,
-            "photoReference": photo_reference,
-            "maxWidth": max_width
-        }
-        
-        if max_height:
-            params["maxHeight"] = max_height
-        
-        try:
-            response = requests.get(url, params=params)
-            response.raise_for_status()
-            
-            # Return the photo data and content type
-            return {
-                "photo_data": response.content,
-                "content_type": response.headers.get('Content-Type', 'image/jpeg')
-            }
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Error fetching photo: {str(e)}")
-            
-            # If new API fails, try the legacy API
-            try:
-                legacy_url = f"{self.photo_api_url}"
-                # Rename parameters for legacy API
-                legacy_params = {
-                    "key": self.api_key,
-                    "photoreference": photo_reference,
-                    "maxwidth": max_width
-                }
-                
-                if max_height:
-                    legacy_params["maxheight"] = max_height
-                
-                legacy_response = requests.get(legacy_url, params=legacy_params)
-                legacy_response.raise_for_status()
-                
-                return {
-                    "photo_data": legacy_response.content,
-                    "content_type": legacy_response.headers.get('Content-Type', 'image/jpeg')
-                }
-            except requests.exceptions.RequestException as legacy_error:
-                logger.error(f"Both API endpoints failed to fetch photo: {str(legacy_error)}")
-                return {
-                    "error": f"Failed to fetch photo: {str(e)}, legacy API also failed: {str(legacy_error)}",
-                    "status": "ERROR"
-                }
     
     def _transform_places_response(self, new_api_response: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -234,35 +168,6 @@ class PlacesClient:
                     "PRICE_LEVEL_VERY_EXPENSIVE": 4
                 }
                 transformed_place["price_level"] = price_level_map.get(place["priceLevel"], 0)
-            
-            # Transform photos
-            if "photos" in place:
-                transformed_place["photos"] = []
-                for photo in place["photos"]:
-                    # Convert author attributions from objects to strings
-                    html_attr_strings = []
-                    try:
-                        for attr in photo.get("authorAttributions", []):
-                            if not isinstance(attr, dict):
-                                logger.warning(f"Unexpected authorAttribution format: {attr}")
-                                continue
-                                
-                            display_name = attr.get("displayName", "")
-                            uri = attr.get("uri", "")
-                            if display_name and uri:
-                                html_attr_strings.append(f'<a href="{uri}">{display_name}</a>')
-                    except Exception as e:
-                        logger.error(f"Error processing photo attribution: {str(e)}")
-                        # Provide empty list if there's an error
-                        html_attr_strings = []
-                    
-                    transformed_photo = {
-                        "photo_reference": photo.get("name", ""),
-                        "height": photo.get("heightPx", 0),
-                        "width": photo.get("widthPx", 0),
-                        "html_attributions": html_attr_strings
-                    }
-                    transformed_place["photos"].append(transformed_photo)
             
             transformed["results"].append(transformed_place)
         
